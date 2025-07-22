@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Environment: {{ filename }}</h3>
+
+<form method="POST" action="{{ url_for('environments.update_environment', filename=filename) }}">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in content.items() %}
+            <tr>
+                <td>
+                    <input type="text" name="edit_key_{{ loop.index0 }}" class="form-control" value="{{ key }}">
+                    <input type="hidden" name="orig_key_{{ loop.index0 }}" value="{{ key }}">
+                </td>
+                <td><input type="text" name="edit_value_{{ loop.index0 }}" class="form-control" value="{{ value }}"></td>
+                <td>
+                    <button type="submit" name="delete_key" value="{{ key }}" class="btn btn-danger btn-sm">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+            <!-- Row to add new key-value -->
+            <tr>
+                <td><input type="text" name="new_key" class="form-control" placeholder="New key"></td>
+                <td><input type="text" name="new_value" class="form-control" placeholder="New value"></td>
+                <td>
+                    <button type="submit" name="add" value="1" class="btn btn-success btn-sm">Add</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="submit" name="update" value="1" class="btn btn-primary">Save Changes</button>
+</form>
+{% endblock %}

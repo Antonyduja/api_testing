@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Edit & Send: {{ request_data.name }}</h3>
+
+<form method="POST">
+    <div class="mb-3">
+        <label>Method</label>
+        <select name="method" class="form-control">
+            {% for m in ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] %}
+                <option value="{{ m }}" {% if m == request_data.method %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>URL</label>
+        <input type="text" name="url" class="form-control" value="{{ request_data.url }}">
+    </div>
+
+    <div class="mb-3">
+        <label>Headers</label>
+        <div id="headers">
+            {% for k, v in request_data.headers.items() %}
+            <div class="row mb-1">
+                <div class="col"><input name="header_key" value="{{ k }}" class="form-control" placeholder="Key"></div>
+                <div class="col"><input name="header_value" value="{{ v }}" class="form-control" placeholder="Value"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Query Params</label>
+        <div id="queryParams">
+            {% for k, v in request_data.query_params.items() %}
+            <div class="row mb-1">
+                <div class="col"><input name="query_key" value="{{ k }}" class="form-control" placeholder="Key"></div>
+                <div class="col"><input name="query_value" value="{{ v }}" class="form-control" placeholder="Value"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Body (Raw)</label>
+        <textarea name="body_raw" class="form-control" rows="5">{{ request_data.body.raw if request_data.body }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Send Request</button>
+</form>
+
+{% if response_data %}
+<hr>
+<h4>Response</h4>
+
+{% if response_data.error %}
+<div class="alert alert-danger">{{ response_data.error }}</div>
+{% else %}
+<div class="mb-2"><strong>Status Code:</strong> {{ response_data.status_code }}</div>
+<div class="mb-2"><strong>Headers:</strong>
+    <pre>{{ response_data.headers | tojson(indent=2) }}</pre>
+</div>
+<div class="mb-2"><strong>Body:</strong>
+    <pre>{{ response_data.body }}</pre>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,59 @@
+name: HSS_API
+requests:
+  - name: Get Users
+    method: GET
+    url: https://api.example.com/users
+    headers:
+      Authorization: Bearer {{token}}
+      Content-Type: application/json
+    query_params:
+      limit: 10
+      offset: 0
+    path_params: {}
+    body: null
+    auth: null
+    scripts:
+      pre_request: |
+        # Python pre-request script
+        print("Preparing request...")
+      test: |
+        # Python test script
+        assert response.status_code == 200
+
+  - name: Create User
+    method: POST
+    url: https://api.example.com/users
+    headers:
+      Content-Type: application/json
+    query_params: {}
+    path_params: {}
+    body:
+      mode: raw
+      raw: |
+        {
+          "name": "John Doe",
+          "email": "john@example.com"
+        }
+    auth:
+      type: bearer
+      token: "{{token}}"
+    scripts:
+      pre_request: ""
+      test: |
+        assert response.json()["id"] is not None
+
+  - name: Delete User
+    method: DELETE
+    url: https://api.example.com/users/{{userId}}
+    headers:
+      Authorization: Bearer {{token}}
+    query_params: {}
+    path_params:
+      userId: 123
+    body: null
+    auth: null
+    scripts:
+      pre_request: ""
+      test: |
+        assert response.status_code == 204
+

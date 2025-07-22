@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API Testing Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+            .body { 
+            background-color: #f4f6f9; 
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .topbar {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info i {
+            margin-right: 8px;
+        }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar">
+    <h4 class="text-center">Menu</h4>
+
+    <!-- Collections Collapsible Section -->
+    <div class="px-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <a class="text-white text-decoration-none" data-bs-toggle="collapse" href="#collapseCollections" role="button" aria-expanded="false" aria-controls="collapseCollections">
+                <strong>Collections</strong>
+            </a>
+            <a href="/collections/new"><i class="bi bi-plus-circle text-white"></i></a>
+        </div>
+        <div class="collapse mt-2" id="collapseCollections">
+            <ul class="list-unstyled ps-3">
+                {% for file in collection_files %}
+                    <li><a href="/collections/view/{{ file }}">{{ file.replace('.yml', '') }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Environments Collapsible Section -->
+    <div class="px-3 mt-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <a class="text-white text-decoration-none" data-bs-toggle="collapse" href="#collapseEnvs" role="button" aria-expanded="false" aria-controls="collapseEnvs">
+                <strong>Environments</strong>
+            </a>
+            <a href="/environment/new"><i class="bi bi-plus-circle text-white"></i></a>
+        </div>
+        <div class="collapse mt-2" id="collapseEnvs">
+            <ul class="list-unstyled ps-3">
+                {% for file in environment_files %}
+                <li class="d-flex justify-content-between align-items-center">
+                    <a href="/environment/view/{{ file }}">{{ file.replace('.yml', '') }}</a>
+                    <a href="#" onclick="confirmDelete('{{ file }}')" class="text-white ms-2" title="Delete file">
+                    <i class="fas fa-trash"></i>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Other Menu -->
+    <div class="px-3 mt-4">
+        <a href="/test">Test</a>
+    </div>
+</div>
+
+        <div class="col-md-10 p-0">
+            <!-- Topbar -->
+            <div class="d-flex justify-content-between align-items-center bg-light px-4 py-2 border-bottom shadow-sm">
+                <div><strong>Home</strong></div>
+            </div>
+
+            <div class="p-4">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Bootstrap Icons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<script>
+function confirmDelete(filename) {
+    if (confirm('Are you sure you want to delete the file "' + filename.replace('.yml', '') + '"?')) {
+        window.location.href = '/environment/delete/' + filename;
+    }
+}
+</script>
+</body>
+</html>
